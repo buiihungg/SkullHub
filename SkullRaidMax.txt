@@ -17,6 +17,8 @@ end
 
 repeat wait(0)until game:IsLoaded()if game:GetService("Players").LocalPlayer.PlayerGui.Main:FindFirstChild("ChooseTeam")then repeat wait()if game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild("Main").ChooseTeam.Visible==true then if _G.Team=="Pirate"then for a,b in pairs(getconnections(game:GetService("Players").LocalPlayer.PlayerGui.Main.ChooseTeam.Container.Pirates.Frame.TextButton.Activated))do b.Function()end elseif _G.Team=="Marine"then for a,b in pairs(getconnections(game:GetService("Players").LocalPlayer.PlayerGui.Main.ChooseTeam.Container.Marines.Frame.TextButton.Activated))do b.Function()end else for a,b in pairs(getconnections(game:GetService("Players").LocalPlayer.PlayerGui.Main.ChooseTeam.Container.Pirates.Frame.TextButton.Activated))do b.Function()end end end until game.Players.LocalPlayer.Team~=nil and game:IsLoaded()end
 
+local Beli = game:GetService("Players").LocalPlayer.Data.Beli.Value
+
 spawn(function()
         pcall(function()
             while wait() do
@@ -43,6 +45,15 @@ spawn(function()
     end)
 end)
 
+spawn(function()
+	    while wait() do
+	                getgenv().rejoin = game:GetService("CoreGui").RobloxPromptGui.promptOverlay.ChildAdded:Connect(function(child)
+                        if child.Name == 'ErrorPrompt' and child:FindFirstChild('MessageArea') and child.MessageArea:FindFirstChild("ErrorFrame") then
+                            game:GetService("TeleportService"):Teleport(game.PlaceId)
+                        end
+                     end)
+	        end
+	    end)
 
 function Bypass(Position)
     local character = game.Players.LocalPlayer.Character
@@ -77,7 +88,6 @@ function bypasstp(x)
 end
 
 local function UB()
-dr = false
     local FruitPrice = {}
     local FruitStore = {}
     for i, v in next, game.ReplicatedStorage:WaitForChild("Remotes").CommF_:InvokeServer("GetFruits") do
@@ -142,8 +152,6 @@ dr = false
             end
         end
     end
-dr = true
-spawn(function()while wait()do pcall(function()local a=game.Players.LocalPlayer;local b=a.Character;for c,d in pairs(a.Backpack:GetChildren())do if d:IsA("Tool")and d.Name:find("Fruit")then game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit",d:GetAttribute("OriginalName"),d)end end end)end end)
 end
 local function SR()
     spawn(function()
@@ -187,6 +195,7 @@ spawn(function()
                 if v:IsA("Model") and v.Name:find("Fruit") then
                      fruitFound = true
                      dr = true
+                      game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Cousin","Buy")
                       spawn(function()while wait()do pcall(function()local a=game.Players.LocalPlayer;local b=a.Character;for c,d in pairs(a.Backpack:GetChildren())do if d:IsA("Tool")and d.Name:find("Fruit")then game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit",d:GetAttribute("OriginalName"),d)end end end)end end)
                     local fruitHandle = v:FindFirstChild("Handle")
                     if fruitHandle then
@@ -393,10 +402,76 @@ end)
 
 spawn(function()
     while wait() do
-        if not fruitFound and game.Players.LocalPlayer.PlayerGui.Main.Timer.Visible == false and not game:GetService("Workspace")["_WorldOrigin"].Locations:FindFirstChild("Island 1") then
+        if not _G.BeliMax and Beli >= 450000 and not fruitFound and game.Players.LocalPlayer.PlayerGui.Main.Timer.Visible == false and not game:GetService("Workspace")["_WorldOrigin"].Locations:FindFirstChild("Island 1") then
             UB()
             wait(2)
+            game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Cousin","Buy")
             SR()
+        end
+    end
+end)
+
+_G.MagnitudeAdd = 0
+
+function getSmallestServer()
+    local url = "https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?sortOrder=Asc&limit=100"
+    local response
+    if syn and syn.request then
+        response = syn.request({Url = url, Method = "GET"})
+    elseif http_request then
+        response = http_request({Url = url, Method = "GET"})
+    elseif request then
+        response = request({Url = url, Method = "GET"})
+    elseif HttpGet then
+        response = {Body = HttpGet(url)}
+    else
+        error("No valid HTTP request method found.")
+    end
+    local data = game:GetService("HttpService"):JSONDecode(response.Body)
+    local smallestServer = nil
+    for _, server in pairs(data.data) do
+        if server.playing < 4 then
+            smallestServer = server.id
+            break
+        end
+    end
+    return smallestServer
+end
+
+function teleportToSmallestServer(player)
+    local serverId = getSmallestServer()
+    if serverId then
+        game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, serverId, player)
+    else
+        warn("No available server found with less than 4 players.")
+    end
+end
+
+spawn(function()
+    while wait() do
+        local chestFound = false
+        if _G.BeliMax and Beli <= 450000 and not fruitFound then
+            for i,v in pairs(game:GetService("Workspace"):GetChildren()) do 
+                if v.Name:find("Chest") then
+                    if game:GetService("Workspace"):FindFirstChild(v.Name) then
+                        if (v.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 5000 + _G.MagnitudeAdd then
+                            chestFound = true
+                            repeat wait()
+                                if game:GetService("Workspace"):FindFirstChild(v.Name) then
+                                    topos(v.CFrame)
+                                end
+                            until _G.BeliMax == false or not v.Parent
+                            topos(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame)
+                            _G.MagnitudeAdd = _G.MagnitudeAdd + 1500
+                            break
+                        end
+                    end
+                end
+            end
+        end
+
+        if _G.BeliMax and Beli <= 450000 and not chestFound then
+            teleportToSmallestServer(game.Players.LocalPlayer)
         end
     end
 end)
@@ -427,7 +502,7 @@ spawn(function()
         local fruitInBackpack = findFruit(backpack)
         local fruitInCharacter = findFruit(character)
 
-        if not fruitFound and not timerVisible and not hasMicrochip and not fruitInBackpack and not fruitInCharacter and not game:GetService("Workspace")["_WorldOrigin"].Locations:FindFirstChild("Island 1") then
+        if not _G.BeliMax and Beli >= 450000 and not fruitFound and not timerVisible and not hasMicrochip and not fruitInBackpack and not fruitInCharacter and not game:GetService("Workspace")["_WorldOrigin"].Locations:FindFirstChild("Island 1") then
             local TeleportService = game:GetService("TeleportService")
             local placeId = game.PlaceId
             local minPlayers = 4
@@ -469,3 +544,4 @@ spawn(function()
         end
     end
 end)
+

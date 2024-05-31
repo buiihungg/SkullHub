@@ -1,0 +1,482 @@
+_G.GettingFruit = true
+_G.AutoAwkening = true
+_G.NextPlaceRaid = true
+
+if game.PlaceId == 2753915549 then
+World1 = true
+print("W1")
+        elseif game.PlaceId == 4442272183 then
+World2 = true
+print("W2")
+        elseif game.PlaceId == 7449423635 then
+World3 = true
+print("W3")
+else
+game.Players.LocalPlayer:Kick("Skull Hub | This Script Only Supports Blox Fruit Game!!")
+end
+
+repeat wait(0)until game:IsLoaded()if game:GetService("Players").LocalPlayer.PlayerGui.Main:FindFirstChild("ChooseTeam")then repeat wait()if game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild("Main").ChooseTeam.Visible==true then if _G.Team=="Pirate"then for a,b in pairs(getconnections(game:GetService("Players").LocalPlayer.PlayerGui.Main.ChooseTeam.Container.Pirates.Frame.TextButton.Activated))do b.Function()end elseif _G.Team=="Marine"then for a,b in pairs(getconnections(game:GetService("Players").LocalPlayer.PlayerGui.Main.ChooseTeam.Container.Marines.Frame.TextButton.Activated))do b.Function()end else for a,b in pairs(getconnections(game:GetService("Players").LocalPlayer.PlayerGui.Main.ChooseTeam.Container.Pirates.Frame.TextButton.Activated))do b.Function()end end end until game.Players.LocalPlayer.Team~=nil and game:IsLoaded()end
+
+spawn(function()
+    pcall(function()
+        if not game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("BodyClip") then
+            local Noclip = Instance.new("BodyVelocity")
+            Noclip.Name = "BodyClip"
+            Noclip.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart
+            Noclip.MaxForce = Vector3.new(100000, 100000, 100000)
+            Noclip.Velocity = Vector3.new(0, 0, 0)
+        end
+        if not game.Players.LocalPlayer.Character:FindFirstChild("Highlight") then
+            local Highlight = Instance.new("Highlight")
+            Highlight.FillColor = Color3.new(0, 86, 255)
+            Highlight.OutlineColor = Color3.new(0, 86, 255)
+            Highlight.Parent = game.Players.LocalPlayer.Character
+        end
+        if true then
+            if game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("BodyClip") then
+                game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("BodyClip"):Destroy()
+            end
+            if game.Players.LocalPlayer.Character:FindFirstChild("Highlight") then
+                game.Players.LocalPlayer.Character:FindFirstChild("Highlight"):Destroy()
+            end
+        end
+    end)
+end)
+
+spawn(function()
+    pcall(function()
+        game:GetService("RunService").Stepped:Connect(function()
+            for _, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+                if v:IsA("BasePart") then
+                    v.CanCollide = false
+                end
+            end
+        end)
+    end)
+end)
+
+
+function Bypass(Position)
+    local character = game.Players.LocalPlayer.Character
+    if character and character:FindFirstChild("Head") then
+        character.Head:Destroy()
+    end
+    character.HumanoidRootPart.CFrame = Position
+    wait(0.5)
+    character.HumanoidRootPart.CFrame = Position
+    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("SetSpawnPoint")
+end
+
+local numpos = 0
+
+function bypasstp(x)
+    spawn(function()
+        while task.wait() do
+            local character = game.Players.LocalPlayer.Character
+            character.HumanoidRootPart.CFrame = x
+            if character.HumanoidRootPart.CFrame == x then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("SetSpawnPoint")
+            end
+            numpos = numpos + 1
+            if numpos == 5 then
+                character.Humanoid.Health = 0
+                numpos = 0
+                break
+            end
+            task.wait()
+        end
+    end)
+end
+
+
+
+local function UB()
+    local FruitPrice = {}
+    local FruitStore = {}
+    for i, v in next, game.ReplicatedStorage:WaitForChild("Remotes").CommF_:InvokeServer("GetFruits") do
+        if v.Price <= 1000000 then  
+            table.insert(FruitPrice, v.Name)
+        end
+    end
+
+    for i, v in pairs(game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("getInventoryFruits")) do
+        for _, x in pairs(v) do
+            if _ == "Name" then 
+                table.insert(FruitStore, x)
+            end
+        end
+    end
+
+    for _, y in pairs(FruitPrice) do
+        for _, z in pairs(FruitStore) do
+            if y == z then
+                local args = {
+                    [1] = "LoadFruit",
+                    [2] = tostring(y)
+                }
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer(unpack(args))
+            end
+        end
+    end
+
+    local player = game:GetService("Players").LocalPlayer
+    local character = player.Character
+    local backpack = player.Backpack
+    local fruitChips = {
+        ["Flame-Flame"] = "Flame",
+        ["Ice-Ice"] = "Ice",
+        ["Quake-Quake"] = "Quake",
+        ["Light-Light"] = "Light",
+        ["Dark-Dark"] = "Dark",
+        ["String-String"] = "String",
+        ["Rumble-Rumble"] = "Rumble",
+        ["Magma-Magma"] = "Magma",
+        ["Human-Human: Buddha Fruit"] = "Human: Buddha",
+        ["Sand-Sand"] = "Sand"
+    }
+
+    _G.SelectChip = "Dark"
+    if character and backpack then
+        for fruit, chip in pairs(fruitChips) do
+            if character:FindFirstChild(fruit) or backpack:FindFirstChild(fruit) then
+                _G.SelectChip = chip
+                break
+            end
+        end
+
+        if not backpack:FindFirstChild("Special Microchip") or not character:FindFirstChild("Special Microchip") then
+            if not game:GetService("Workspace")["_WorldOrigin"].Locations:FindFirstChild("Island 1") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("RaidsNpc", "Select", _G.SelectChip)
+                if World2 then
+                    fireclickdetector(game:GetService("Workspace").Map.CircleIsland.RaidSummon2.Button.Main.ClickDetector)
+                elseif World3 then
+                    fireclickdetector(game:GetService("Workspace").Map["Boat Castle"].RaidSummon2.Button.Main.ClickDetector)
+                end
+            end
+        end
+    end
+end
+
+local function SR()
+    spawn(function()
+        while task.wait(0) do
+            if game.Players.LocalPlayer.PlayerGui.Main.Timer.Visible then
+                for i,v in pairs(game.Workspace.Enemies:GetChildren()) do
+                    if v:FindFirstChild("Humanoid") and v:FindFirstChild("HumanoidRootPart") and (v.HumanoidRootPart.Position - game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position).magnitude <= 400 then
+                        pcall(function()
+                            repeat task.wait(.1)
+                                sethiddenproperty(game.Players.LocalPlayer, "SimulationRadius", math.huge)
+                                v.Humanoid.Health = 0
+                                v.HumanoidRootPart.CanCollide = false
+                                v.HumanoidRootPart.Size = Vector3.new(50,50,50)
+                                v.HumanoidRootPart.Transparency = 0.5
+                            until not game.Players.LocalPlayer.PlayerGui.Main.Timer.Visible or v.Humanoid.Health <= 0 or not v.Parent
+                        end)
+                    end
+                end
+            end
+        end
+    end)
+    
+    spawn(function()
+        pcall(function()
+            while wait(.1) do
+                if _G.AutoAwkening then
+                    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Awakener","Check")
+                    game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("Awakener","Awaken")
+                end
+            end
+        end)
+    end)
+end
+
+local fruitFound = false
+
+spawn(function()
+    while wait(0.1) do
+        if _G.GettingFruit then
+            for _, v in pairs(game.Workspace:GetChildren()) do
+                if v:IsA("Model") and v.Name:find("Fruit") then
+                     fruitFound = true
+                    local fruitHandle = v:FindFirstChild("Handle")
+                    if fruitHandle then
+                        local position = fruitHandle.CFrame
+                        local offsetPosition = position * CFrame.new(100, 0, 100) -- Offset position by 100 studs along the X and Z axes
+                        Bypass(offsetPosition)
+                        wait(1)
+                        topos(position)
+                    end
+                end
+            end
+        end
+    end
+end)
+dr = true
+spawn(function()while wait()do pcall(function()local a=game.Players.LocalPlayer;local b=a.Character;for c,d in pairs(a.Backpack:GetChildren())do if d:IsA("Tool")and d.Name:find("Fruit")then game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit",d:GetAttribute("OriginalName"),d)end end end)end end)
+function DF()
+    pcall(function()
+        game.Players.LocalPlayer.PlayerGui.Main.FruitInventory.Position = UDim2.new(10.100, 0, 0.100, 0)
+        game.Players.LocalPlayer.PlayerGui.Main.FruitInventory.Visible = true
+        local invenfruit = game.Players.LocalPlayer.PlayerGui.Main.FruitInventory.Container.Stored.ScrollingFrame.Frame
+        wait(.3)
+        for i,v in pairs(invenfruit:GetChildren()) do
+            if string.find(v.Name,"-") then
+                for _,Backpack in pairs(game:GetService("Players").LocalPlayer.Backpack:GetChildren()) do
+                    FruitStoreF = string.split(Backpack.Name, " ")[1]
+                    FruitStoreR = FruitStoreF.."-"..FruitStoreF
+                    if v.Name == FruitStoreR then
+                        game:GetService("Players").LocalPlayer.Backpack:FindFirstChild(Backpack.Name):Destroy()
+                    end												
+                end
+            end
+        end
+        for i,v in pairs(invenfruit:GetChildren()) do
+            if string.find(v.Name,"-") then
+                for _,Character in pairs(game:GetService("Players").LocalPlayer.Character:GetChildren()) do
+                    FruitStoreF = string.split(Character.Name, " ")[1]
+                    FruitStoreR = FruitStoreF.."-"..FruitStoreF
+                    if v.Name == FruitStoreR then
+                        game:GetService("Players").LocalPlayer.Character:FindFirstChild(Character.Name):Destroy()
+                    end												
+                end
+            end
+        end
+    end)
+end
+spawn(function()
+while task.wait() do
+    if dr then
+        pcall(function()
+            if drl then
+            DF()
+            end
+            task.wait()
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Bomb Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Bomb Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Bomb-Bomb",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Bomb Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Bomb Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Spike Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Spike Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Spike-Spike",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Spike Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Spike Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Chop Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Chop Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Chop-Chop",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Chop Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Chop Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Spring Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Spring Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Spring-Spring",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Spring Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Spring Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Rocket Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Rocket Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Rocket-Rocket",
+                game:GetService("Players").LocalPlayer.Character:FindFirstChild("Rocket Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Rocket Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Kilo Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Kilo Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Kilo-Kilo",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Kilo Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Kilo Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Smoke Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Smoke Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Smoke-Smoke",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Smoke Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Smoke Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Spin Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Spin Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Spin-Spin",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Spin Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Spin Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Flame Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Flame Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Flame-Flame",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Flame Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Flame Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Bird: Falcon Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Bird: Falcon Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Bird-Bird: Falcon",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Bird: Falcon Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Bird: Falcon Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Ice Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Ice Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Ice-Ice",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Ice Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Ice Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Sand Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Sand Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Sand-Sand",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Sand Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Sand Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Dark Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Dark Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Dark-Dark",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Dark Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Dark Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Revive Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Revive Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Revive-Revive",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Revive Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Revive Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Diamond Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Diamond Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Diamond-Diamond",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Diamond Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Diamond Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Light Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Light Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Light-Light",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Light Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Light Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Love Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Love Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Love-Love",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Love Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Love Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Rubber Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Rubber Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Rubber-Rubber",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Rubber Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Rubber Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Barrier Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Barrier Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Barrier-Barrier",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Barrier Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Barrier Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Magma Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Magma Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Magma-Magma",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Magma Fruit") or
+                    game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Magma Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Door Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Door Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Door-Door",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Door Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Door Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Quake Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Quake Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Quake-Quake",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Quake Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Quake Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Human-Human: Buddha Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Human-Human: Buddha Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Human-Human: Buddha",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Human-Human: Buddha Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Human-Human: Buddha Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("String Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("String Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "String-String",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("String Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("String Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Bird: Phoenix Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Bird: Phoenix Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Bird-Bird: Phoenix",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Bird: Phoenix Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Bird: Phoenix Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Rumble Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Rumble Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Rumble-Rumble",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Rumble Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Rumble Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Paw Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Paw Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Paw-Paw",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Paw Fruit") or
+                    game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Paw Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Gravity Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Gravity Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Gravity-Gravity",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Gravity Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Gravity Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Dough Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Dough Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Dough-Dough",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Dough Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Dough Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Shadow Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Shadow Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Shadow-Shadow",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Shadow Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Shadow Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Venom Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Venom Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Venom-Venom",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Venom Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Venom Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Control Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Control Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Control-Control",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Control Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Control Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Dragon Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Dragon Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Dragon-Dragon",
+                game:GetService("Players").LocalPlayer.Character:FindFirstChild("Dragon Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Dragon Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("T-Rex Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("T-Rex Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "T-Rex-T-Rex",
+                game:GetService("Players").LocalPlayer.Character:FindFirstChild("T-Rex Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("T-Rex Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Mammoth Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Mammoth Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Mammoth-Mammoth",
+                game:GetService("Players").LocalPlayer.Character:FindFirstChild("Mammoth Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Mammoth Fruit"))
+            end
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Leopard Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Leopard Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Leopard-Leopard",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Leopard Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Leopard Fruit"))
+            end
+        end)
+    end
+end
+end)
+
+spawn(function()
+    while wait() do
+        if not fruitFound and game.Players.LocalPlayer.PlayerGui.Main.Timer.Visible == false and not game:GetService("Workspace")["_WorldOrigin"].Locations:FindFirstChild("Island 1") then
+            UB()
+            wait(2)
+            SR()
+        end
+    end
+end)
+
+local function findFruit(item)
+    for _, child in pairs(item:GetChildren()) do
+        if string.find(child.Name, "Fruit") then
+            return true
+        end
+    end
+    return false
+end
+
+spawn(function()
+    wait(15)
+    while wait(25) do
+        local player = game.Players.LocalPlayer
+        local backpack = player:FindFirstChild("Backpack")
+        local character = player.Character
+
+        if not backpack or not character then
+            warn("Backpack or character not found.")
+            continue
+        end
+
+        local timerVisible = player.PlayerGui.Main.Timer.Visible
+        local hasMicrochip = backpack:FindFirstChild("Special Microchip") or character:FindFirstChild("Special Microchip")
+        local fruitInBackpack = findFruit(backpack)
+        local fruitInCharacter = findFruit(character)
+
+        if not fruitFound and not timerVisible and not hasMicrochip and not fruitInBackpack and not fruitInCharacter and not game:GetService("Workspace")["_WorldOrigin"].Locations:FindFirstChild("Island 1") then
+            local TeleportService = game:GetService("TeleportService")
+            local placeId = game.PlaceId
+            local minPlayers = 4
+
+            local function getSmallestServer()
+                local url = "https://games.roblox.com/v1/games/" .. placeId .. "/servers/Public?sortOrder=Asc&limit=100"
+                local response
+                if syn and syn.request then
+                    response = syn.request({Url = url, Method = "GET"})
+                elseif http_request then
+                    response = http_request({Url = url, Method = "GET"})
+                elseif request then
+                    response = request({Url = url, Method = "GET"})
+                elseif HttpGet then
+                    response = {Body = HttpGet(url)}
+                else
+                    error("No valid HTTP request method found.")
+                end
+                local data = game:GetService("HttpService"):JSONDecode(response.Body)
+                local smallestServer = nil
+                for _, server in pairs(data.data) do
+                    if server.playing < minPlayers then
+                        smallestServer = server.id
+                        break
+                    end
+                end
+                return smallestServer
+            end
+
+            local function teleportToSmallestServer(player)
+                local serverId = getSmallestServer()
+                if serverId then
+                    TeleportService:TeleportToPlaceInstance(placeId, serverId, player)
+                else
+                    warn("No available server found with less than " .. minPlayers .. " players.")
+                end
+            end
+           teleportToSmallestServer(player)
+        end
+    end
+end)

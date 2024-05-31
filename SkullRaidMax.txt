@@ -366,9 +366,9 @@ while task.wait() do
                     game:GetService("Players").LocalPlayer.Character:FindFirstChild("Magma Fruit") or
                     game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Magma Fruit"))
             end
-            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Door Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Door Fruit") then
-                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Door-Door",
-                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Door Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Door Fruit"))
+            if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Portal Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Portal Fruit") then
+                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Portal-Portal",
+                    game:GetService("Players").LocalPlayer.Character:FindFirstChild("Portal Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Portal Fruit"))
             end
             if game:GetService("Players").LocalPlayer.Character:FindFirstChild("Quake Fruit") or game:GetService("Players").LocalPlayer.Backpack:FindFirstChild("Quake Fruit") then
                 game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit", "Quake-Quake",
@@ -485,17 +485,30 @@ end
 
 spawn(function()
     while wait() do
-    if fruitFound == true then
-    _G.BeliMax = false
-end
-end
+        if fruitFound == true then
+            _G.BeliMax = false
+        end
+    end
 end)
+
+function equipTools()
+    for i, tool in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+        if tool:IsA("Tool") then
+            game.Players.LocalPlayer.Character.Humanoid:EquipTool(tool)
+            wait(0.1)  -- Thời gian chờ để trang bị tool
+        end
+    end
+end
+
+function jump()
+    game.Players.LocalPlayer.Character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+end
 
 spawn(function()
     while wait() do
         local chestFound = false
         if _G.BeliMax and Beli <= 450000 and not fruitFound then
-            for i,v in pairs(game:GetService("Workspace"):GetChildren()) do 
+            for i, v in pairs(game:GetService("Workspace"):GetChildren()) do 
                 if v.Name:find("Chest") then
                     if game:GetService("Workspace"):FindFirstChild(v.Name) then
                         if (v.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude <= 5000 + _G.MagnitudeAdd then
@@ -503,6 +516,9 @@ spawn(function()
                             repeat wait()
                                 if game:GetService("Workspace"):FindFirstChild(v.Name) then
                                     topos(v.CFrame)
+                                    wait(1)  -- Chờ để đảm bảo đã đến vị trí
+                                    equipTools()  -- Gọi hàm trang bị tool
+                                    jump()  -- Gọi hàm nhảy
                                 end
                             until _G.BeliMax == false or not v.Parent
                             topos(game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame)

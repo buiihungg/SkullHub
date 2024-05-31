@@ -1,4 +1,5 @@
 _G.GettingFruit = true
+_G.BeliMax = true
 _G.AutoAwkening = true
 _G.NextPlaceRaid = true
 
@@ -64,6 +65,41 @@ function Bypass(Position)
     wait(0.5)
     character.HumanoidRootPart.CFrame = Position
     game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("SetSpawnPoint")
+end
+
+function topos(Pos)
+    -- Check if Pos and the player's character are valid
+    if not Pos or not game.Players.LocalPlayer.Character or not game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        warn("Invalid position or player character not found")
+        return
+    end
+
+    local Distance = (Pos.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+    local Speed
+
+    if Distance < 25 then
+        Speed = 5000
+    elseif Distance < 50 then
+        Speed = 2000
+    elseif Distance < 150 then
+        Speed = 800
+    elseif Distance < 250 then
+        Speed = 600
+    elseif Distance < 500 then
+        Speed = 300
+    elseif Distance < 750 then
+        Speed = 250
+    elseif Distance >= 750 then -- corrected condition
+        Speed = 200
+    else
+        Speed = 200 -- default value
+    end
+
+    game:GetService("TweenService"):Create(
+        game.Players.LocalPlayer.Character.HumanoidRootPart,
+        TweenInfo.new(Distance / Speed, Enum.EasingStyle.Linear),
+        {CFrame = Pos}
+    ):Play()
 end
 
 local numpos = 0

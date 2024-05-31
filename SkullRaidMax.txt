@@ -76,9 +76,8 @@ function bypasstp(x)
     end)
 end
 
-
-
 local function UB()
+dr = false
     local FruitPrice = {}
     local FruitStore = {}
     for i, v in next, game.ReplicatedStorage:WaitForChild("Remotes").CommF_:InvokeServer("GetFruits") do
@@ -144,7 +143,7 @@ local function UB()
         end
     end
 end
-
+dr = true
 local function SR()
     spawn(function()
         while task.wait(0) do
@@ -186,6 +185,7 @@ spawn(function()
             for _, v in pairs(game.Workspace:GetChildren()) do
                 if v:IsA("Model") and v.Name:find("Fruit") then
                      fruitFound = true
+                     dr = true
                     local fruitHandle = v:FindFirstChild("Handle")
                     if fruitHandle then
                         local position = fruitHandle.CFrame
@@ -199,7 +199,7 @@ spawn(function()
         end
     end
 end)
-dr = true
+
 spawn(function()while wait()do pcall(function()local a=game.Players.LocalPlayer;local b=a.Character;for c,d in pairs(a.Backpack:GetChildren())do if d:IsA("Tool")and d.Name:find("Fruit")then game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit",d:GetAttribute("OriginalName"),d)end end end)end end)
 function DF()
     pcall(function()

@@ -142,8 +142,9 @@ dr = false
             end
         end
     end
-end
 dr = true
+spawn(function()while wait()do pcall(function()local a=game.Players.LocalPlayer;local b=a.Character;for c,d in pairs(a.Backpack:GetChildren())do if d:IsA("Tool")and d.Name:find("Fruit")then game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit",d:GetAttribute("OriginalName"),d)end end end)end end)
+end
 local function SR()
     spawn(function()
         while task.wait(0) do
@@ -186,6 +187,7 @@ spawn(function()
                 if v:IsA("Model") and v.Name:find("Fruit") then
                      fruitFound = true
                      dr = true
+                      spawn(function()while wait()do pcall(function()local a=game.Players.LocalPlayer;local b=a.Character;for c,d in pairs(a.Backpack:GetChildren())do if d:IsA("Tool")and d.Name:find("Fruit")then game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit",d:GetAttribute("OriginalName"),d)end end end)end end)
                     local fruitHandle = v:FindFirstChild("Handle")
                     if fruitHandle then
                         local position = fruitHandle.CFrame
@@ -200,7 +202,6 @@ spawn(function()
     end
 end)
 
-spawn(function()while wait()do pcall(function()local a=game.Players.LocalPlayer;local b=a.Character;for c,d in pairs(a.Backpack:GetChildren())do if d:IsA("Tool")and d.Name:find("Fruit")then game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("StoreFruit",d:GetAttribute("OriginalName"),d)end end end)end end)
 function DF()
     pcall(function()
         game.Players.LocalPlayer.PlayerGui.Main.FruitInventory.Position = UDim2.new(10.100, 0, 0.100, 0)

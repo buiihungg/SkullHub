@@ -485,6 +485,14 @@ end
 
 spawn(function()
     while wait() do
+    if fruitFound == true then
+    _G.BeliMax = false
+end
+end
+end)
+
+spawn(function()
+    while wait() do
         local chestFound = false
         if _G.BeliMax and Beli <= 450000 and not fruitFound then
             for i,v in pairs(game:GetService("Workspace"):GetChildren()) do 
@@ -506,7 +514,7 @@ spawn(function()
             end
         end
 
-        if _G.BeliMax and Beli <= 450000 and not chestFound then
+        if _G.BeliMax and Beli <= 450000 and not chestFound and not fruitFound then
             teleportToSmallestServer(game.Players.LocalPlayer)
         end
     end
